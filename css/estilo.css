@@ -110,7 +110,6 @@
   padding: 50px;
   border-radius: 30px;
   display: none;
-  position: relative;
 }
 
 .modal .modal-login.active {
@@ -510,6 +509,27 @@
 .cenario .abaixar {
   width: 70px;
   left: 60px;
+}
+
+.btn-controle {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 15px 20px;
+  font-size: 1.2rem;
+  margin: 10px;
+  width: 80%;
+  transition: background-color 0.3s;
+}
+
+.btn-controle:hover {
+  background-color: #2980b9;
+}
+
+.controls{
+  display: flex;
+  position: fixed;
 }
 
 .azul {

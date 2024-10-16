@@ -22,6 +22,10 @@ const btnReiniciar = document.querySelectorAll('#btnReiniciar');
 const btnRanking = document.querySelector('#btnRanking');
 const tabela = document.querySelector('#tabela');
 
+const btnJump = document.getElementById('btnJump');
+const btnFly = document.getElementById('btnFly');
+const btnDuck = document.getElementById('btnDuck');
+
 let nomeJogador;
 let moedasJogador = 0;
 let estrelasJogador = 0;
@@ -32,11 +36,31 @@ let tempoTime;
 let tempoMoverElementos;
 let tempoPegarElementos;
 
-const validarJogador = ({ target }) => {
+const pular = () => {
+    modulos.imgMario.style.bottom = '200px';
+    setTimeout(() => {
+        modulos.imgMario.style.bottom = '0px';
+    }, 500);
+};
 
+const voar = () => {
+    modulos.imgMario.style.bottom = '250px';
+    setTimeout(() => {
+        modulos.imgMario.style.bottom = '0px';
+    }, 1000);
+};
+
+const abaixar = () => {
+    modulos.imgMario.style.height = '50px';
+};
+
+const levantar = () => {
+    modulos.imgMario.style.height = '100px';
+};
+
+const validarJogador = ({ target }) => {
     if (target.value.length > 2) {
         btnStart.removeAttribute('disabled');
-
         nomeJogador = target.value.trim().toUpperCase();
 
         btnStart.addEventListener('click', start);
@@ -46,11 +70,9 @@ const validarJogador = ({ target }) => {
                 start();
             }
         });
-
     } else {
         btnStart.setAttribute('disabled', '');
     }
-
 };
 
 const iniciarJogo = () => {
@@ -63,10 +85,16 @@ const start = () => {
     modulos.limparTexto();
     modulos.stopSom('somAbertura');
     modulos.playSom('somPrincipal');
-    document.addEventListener('keydown', modulos.pular);
-    document.addEventListener('keydown', modulos.voar);
-    document.addEventListener('keydown', modulos.abaixar);
-    document.addEventListener('keyup', modulos.levantar);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowUp') pular();
+        if (e.key === ' ') voar();
+        if (e.key === 'ArrowDown') abaixar();
+    });
+
+    btnJump.addEventListener('click', pular);
+    btnFly.addEventListener('click', voar);
+    btnDuck.addEventListener('click', abaixar);
 
     modal.classList.remove('habilitar');
     modalLogin.classList.remove('active');
@@ -113,12 +141,9 @@ const moverElementos = (elemento, retardo = 0) => {
     }, 1);
 };
 
-
-
 const pegarElementos = () => {
     tempoPegarElementos = setInterval(() => {
         let posicaoMarioBottom = window.getComputedStyle(modulos.imgMario).bottom.replace('px', '');
-
         let posicaoMarioTop = modulos.imgMario.offsetTop;
 
         imgMoedas.forEach((item, index) => {
@@ -126,19 +151,14 @@ const pegarElementos = () => {
 
             if (posicaoMarioBottom >= 170 && posicaoMarioBottom <= 200 && posicaoMoedaLeft <= 150) {
                 moedasJogador++;
-
                 txtMoedas.innerHTML = moedasJogador;
-
                 item.style.display = 'none';
-
                 modulos.playSom('somMoeda');
 
                 setTimeout(() => {
                     item.style.display = 'block';
                 }, 100);
-
             }
-
         });
 
         imgEstrelas.forEach((item) => {
@@ -146,36 +166,28 @@ const pegarElementos = () => {
 
             if (posicaoMarioTop <= 250 && posicaoMarioTop >= 120 && posicaoEstrelaLeft <= 350 && posicaoEstrelaLeft >= 200) {
                 estrelasJogador++;
-
                 txtEstrelas.innerHTML = estrelasJogador;
-
                 item.style.display = 'none';
-
                 modulos.playSom('somMoeda');
 
                 setTimeout(() => {
                     item.style.display = 'block';
                 }, 100);
             }
-
         });
-
     }, 250);
 };
-
 
 const controlePartida = () => {
     const loopControlePartida = setInterval(() => {
         const posicaoTuboLeft = imgTubo.offsetLeft;
         const posicaoBalaLeft = imgBala.offsetLeft;
         const alturaMario = modulos.imgMario.offsetHeight;
-
         const posicaoMarioBottom = window.getComputedStyle(modulos.imgMario).bottom.replace('px', '');
 
         if (posicaoTuboLeft <= 120 && posicaoTuboLeft >= 50 && posicaoMarioBottom <= 110) {
             imgTubo.style.animation = 'none';
             imgTubo.style.left = `${posicaoTuboLeft}px`;
-
             modulos.imgMario.style.animation = 'none';
             modulos.imgMario.style.bottom = `${posicaoMarioBottom}px`;
 
@@ -190,13 +202,11 @@ const controlePartida = () => {
             setTimeout(() => {
                 gameOver();
             }, 1500);
-
         }
 
         if (posicaoBalaLeft <= 120 && posicaoBalaLeft >= 50 && posicaoMarioBottom <= 110 && alturaMario >= 100) {
             imgBala.style.animation = 'none';
             imgBala.style.left = `${posicaoBalaLeft}px`;
-
             modulos.imgMario.style.animation = 'none';
             modulos.imgMario.style.bottom = `${posicaoMarioBottom}px`;
 
@@ -228,7 +238,6 @@ const gameOver = () => {
     clearInterval(tempoPegarElementos);
 
     calcularPontuacao();
-
     conexoes.bancoTemp(nomeJogador, moedasJogador, estrelasJogador, tempoJogador, pontuacaoJogador);
 
     modal.classList.add('habilitar');
@@ -239,6 +248,7 @@ const reiniciarPartida = () => {
     modulos.playSom('somAbertura');
     location.reload(true);
 };
+
 btnReiniciar.forEach((btn) => {
     btn.addEventListener('click', reiniciarPartida);
 });
@@ -250,15 +260,15 @@ const telaRanking = () => {
     modulos.playSom('somRanking');
 
     tabelaRanking();
-
 };
+
 btnRanking.addEventListener('click', telaRanking);
 
 const tabelaRanking = () => {
     const classificacao = conexoes.getBanco().sort(colocacao).reverse();
 
     classificacao.forEach((item, index) => {
-        let posicao = index +1;
+        let posicao = index + 1;
         let nome = item.nomeJogador;
         let moedas = item.moedasJogador;
         let estrelas = item.estrelasJogador;
@@ -285,17 +295,12 @@ const criarTabela = (posicao, nome, moedas, estrelas, tempo, pontuacao) => {
     tabela.appendChild(elementoHTML);
 };
 
-
 const colocacao = (a, b) => {
-    if(a.pontuacaoJogador > b.pontuacaoJogador) {
+    if (a.pontuacaoJogador > b.pontuacaoJogador) {
         return 1;
     } else if (a.pontuacaoJogador < b.pontuacaoJogador) {
         return -1;
     } else {
         return 0;
     }
-
 };
-
-
-
