@@ -14,7 +14,6 @@
         z-index: 100;
     }
 
-    // Estilo Login
     .modal-login {
         width: 650px;
         min-height: 400px;
@@ -130,7 +129,6 @@
             }
 
             .tabela {
-                // width: 450px;
                 color: white;
                 text-align: center;
                 border-radius: 5px;
@@ -152,7 +150,6 @@
 
     }
 
-    // Estilo botão dentro do modal
     .btn-modal {
         background: none;
         border: none;
@@ -217,7 +214,6 @@
         -webkit-text-stroke: 3px black;
     }
 
-    // Estilo das imagens do Mario dentro do modal
     .img-mario {
         position: absolute;
         right: -100px;

@@ -1,8 +1,6 @@
-// Importações
 import * as conexoes from './conexao.js';
 import * as modulos from './modulos.js';
 
-// Elementos Globais
 const inputJogador = document.querySelector('#inputJogador');
 const btnStart = document.querySelector('#btnStart');
 const modal = document.querySelector('#modal');
@@ -24,7 +22,6 @@ const btnReiniciar = document.querySelectorAll('#btnReiniciar');
 const btnRanking = document.querySelector('#btnRanking');
 const tabela = document.querySelector('#tabela');
 
-// Variáveis Globais
 let nomeJogador;
 let moedasJogador = 0;
 let estrelasJogador = 0;
@@ -35,9 +32,7 @@ let tempoTime;
 let tempoMoverElementos;
 let tempoPegarElementos;
 
-// Funções
 const validarJogador = ({ target }) => {
-    // console.log(target.value);
 
     if (target.value.length > 2) {
         btnStart.removeAttribute('disabled');
@@ -115,13 +110,6 @@ const moverElementos = (elemento, retardo = 0) => {
         if (tempoJogador <= 10) {
             elemento.style.animation = `mover-elementos 3s infinite linear ${retardo}s`;
         }
-        // } else if (tempoJogador <= 20) {
-        //     elemento.style.animation = `mover-elementos 2.5s infinite linear ${retardo}s`;
-        // } else if (tempoJogador <= 30) {
-        //     elemento.style.animation = `mover-elementos 2s infinite linear ${retardo}s`;
-        // } else if (tempoJogador > 40) {
-        //     elemento.style.animation = `mover-elementos 1.2s infinite linear ${retardo}s`;
-        // }
     }, 1);
 };
 
@@ -233,7 +221,6 @@ const calcularPontuacao = () => {
 };
 
 const gameOver = () => {
-    // modulos.stopSom('somPerdeu');
     modulos.playSom('somGameOver');
 
     clearInterval(tempoTime);
@@ -308,9 +295,6 @@ const colocacao = (a, b) => {
         return 0;
     }
 
-    // return a.pontuacaoJogador > b.pontuacaoJogador ? 1
-    // : a.pontuacaoJogador < b.pontuacaoJogador ? -1
-    // : 0;
 };
 
 
